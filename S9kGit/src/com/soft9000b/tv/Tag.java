@@ -79,7 +79,7 @@ public class Tag implements java.io.Serializable, java.lang.Comparable {
      *
      * @param sTag The string to assign.
      */
-    public void setTag(String sTag) {
+    public final void setTag(String sTag) {
         if (sTag == null) {
             sTag = "";
         }
@@ -103,7 +103,7 @@ public class Tag implements java.io.Serializable, java.lang.Comparable {
      *
      * @param sValue The value to assign.
      */
-    public void setValue(String sValue) {
+    public final void setValue(String sValue) {
         if (sValue == null) {
             sValue = "";
         }

@@ -23,6 +23,8 @@
  */
 package com.soft9000b.file;
 
+import com.soft9000b.xcoders.Hex16;
+import com.soft9000b.xcoders.XCodes;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -42,14 +44,17 @@ public class TextLineReader {
 
     private File pwFile = null;
     private BufferedReader in = null;
+    private final XCodes encoded;
 
     /**
      * Create a 'slow reader' for a newline-encrusted file.
      *
      * @param file A newline-delimited file.
+     * @param encoded Decoded lines as embedded newlines, may be therein.
      */
-    public TextLineReader(File file) {
+    public TextLineReader(File file, XCodes encoded) {
         pwFile = file;
+        this.encoded = encoded;
     }
 
     /**
@@ -106,7 +111,11 @@ public class TextLineReader {
             return null;
         }
         try {
-            return in.readLine();
+            String line = in.readLine();
+            if (line == null)
+                return line;
+            return XCodes.Decode(encoded, line);
+
         } catch (IOException ex) {
             return null;
         }

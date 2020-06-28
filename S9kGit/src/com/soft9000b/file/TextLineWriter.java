@@ -23,6 +23,8 @@
  */
 package com.soft9000b.file;
 
+import com.soft9000b.xcoders.Hex16;
+import com.soft9000b.xcoders.XCodes;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,6 +39,7 @@ public class TextLineWriter {
 
     private File pwFile = null;
     private BufferedWriter out = null;
+    private final XCodes encoded;
 
     /**
      * Create a 'slow writer' for a newline-encrusted file. Will not be deleted
@@ -44,10 +47,12 @@ public class TextLineWriter {
      *
      * @param file A newline-delimited file that you want to <b>over-write,
      * delete, or create</b>.
+     * @param encoded Encode lines so embedded newlines, may be therein.
      *
      */
-    public TextLineWriter(File file) {
+    public TextLineWriter(File file, XCodes encoded) {
         pwFile = file;
+        this.encoded = encoded;
     }
 
     /**
@@ -91,6 +96,7 @@ public class TextLineWriter {
     /**
      * Writes a line to the file. Returns null on error or end of file.
      *
+     * @param str Clear-text string to put into the file.
      * @return True if all went well.
      */
     public boolean writeLine(String str) {
@@ -98,7 +104,7 @@ public class TextLineWriter {
             return false;
         }
         try {
-            out.write(str);
+            out.write(XCodes.Encode(encoded,str));
             out.newLine();
             out.flush();
             return true;

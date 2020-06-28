@@ -26,6 +26,7 @@ package com.soft9000b.collections;
 import com.soft9000b.file.TextLineReader;
 import com.soft9000b.file.TextLineWriter;
 import com.soft9000b.tv.TagPair;
+import com.soft9000b.xcoders.XCodes;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class FileDictionary extends Dictionary implements Serializable {
             return false;
         }
         this.zFile = new File(aFile);
-        com.soft9000b.file.TextLineReader foo = new TextLineReader(zFile);
+        com.soft9000b.file.TextLineReader foo = new TextLineReader(zFile, XCodes.x16);
         if(!foo.open())
             return false;
         String sLine;
@@ -90,7 +91,7 @@ public class FileDictionary extends Dictionary implements Serializable {
     }
 
     public boolean save() {
-        com.soft9000b.file.TextLineWriter foo = new TextLineWriter(zFile);
+        com.soft9000b.file.TextLineWriter foo = new TextLineWriter(zFile, XCodes.x16);
         if(!foo.open())
             return false;
         for (TagPair zTag : this.dict) {
@@ -103,7 +104,7 @@ public class FileDictionary extends Dictionary implements Serializable {
     
     public boolean save(String aFile) {
         zFile = new File(aFile);
-        com.soft9000b.file.TextLineWriter foo = new TextLineWriter(zFile);
+        com.soft9000b.file.TextLineWriter foo = new TextLineWriter(zFile, XCodes.x16);
         if(!foo.open())
             return false;
         for (TagPair zTag : this.dict) {

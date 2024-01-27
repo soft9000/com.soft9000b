@@ -161,8 +161,8 @@ public class IniSection implements Comparable {
      * @param pair
      * @return False when the provided TagValue item is null.
      */
-    public boolean append(final TagPair pair) {
-        if (pair != null) {
+    public boolean add(TagPair pair) {
+        if (pair != null && !pair.isNull()) {
             return section.add(pair);
         }
         return false;
@@ -206,6 +206,22 @@ public class IniSection implements Comparable {
             }
         }
         return null;
+    }
+
+    /**
+     * Find the place to begin an insertion (etc.)
+     *
+     * @param tag KEY
+     * @return
+     */
+    private int getTagPos(final String tag) {
+        for (int ss = 0; ss < section.size(); ss++) {
+            TagPair sec = section.get(ss);
+            if (sec.getTag().equals(tag)) {
+                return ss;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -268,12 +284,30 @@ public class IniSection implements Comparable {
         }
     }
 
+    /**
+     * Add a comment to the section.
+     *
+     * @param sline
+     */
     public void addComment(final String sline) {
-        this.section.add(IniSection.MkComment(sline));
+        if (sline == null) {
+            return;
+        }
+        String str = sline;
+        if (!str.startsWith(";")) {
+            str = "; " + str;
+        }
+        this.section.add(IniSection.MkComment(str));
     }
 
-    public void append(String key, String value) {
-        this.append(new TagPair(key, value));
+    public boolean add(String key, String value) {
+        if (key == null | key.isEmpty()) {
+            return false;
+        }
+        if (value == null | value.isEmpty()) {
+            return false;
+        }
+        return this.add(new TagPair(key, value));
     }
 
     @Override
@@ -291,6 +325,30 @@ public class IniSection implements Comparable {
             }
         }
         return this.section.size() - count;
+    }
+
+    /**
+     * Super-comments preceed SECTION names.
+     *
+     * @param sline
+     * @return
+     */
+    public boolean addSuperComment(final String sline) {
+        if (sline == null) {
+            // Not going to create a default section - nope.
+            return false;
+        }
+        String str = sline;
+        if (!str.startsWith(";")) {
+            str = "; " + str;
+        }
+        int pos = getTagPos(SECTIONID);
+        if (pos == -1) {
+            this.addComment(str);
+        } else {
+            this.section.add(pos, IniSection.MkComment(str));
+        }
+        return true;
     }
 
 }

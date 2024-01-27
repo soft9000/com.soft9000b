@@ -32,9 +32,28 @@ import java.util.ArrayList;
  */
 public class IniFile implements Comparable {
 
+    /**
+     * Another common use case - convenience:
+     *
+     * @param tfile
+     * @return Warning: null if the file is not found.
+     */
+    public static IniFile Read(File tfile) {
+        if (tfile.exists() == false) {
+            return null;
+        }
+        IniFile ini = new IniFile(tfile);
+        return ini.read();
+    }
+
     public ArrayList<IniSection> groups = new ArrayList<>();
     File zfile = null;
 
+    /**
+     * A file for either reading, or writing.
+     *
+     * @param file File may, or may'nt, exist.
+     */
     public IniFile(File file) {
         this.zfile = file;
     }
@@ -52,6 +71,10 @@ public class IniFile implements Comparable {
         return false;
     }
 
+    /**
+     * If there are no sections, then the file is empty.
+     * @return 
+     */
     public boolean isEmpty() {
         return groups.isEmpty();
     }

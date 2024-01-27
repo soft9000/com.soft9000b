@@ -44,6 +44,21 @@ public class TextLineWriter {
     /**
      * Create a 'slow writer' for a newline-encrusted file. Will not be deleted
      * or created until it is opened.
+     * 
+     * Common use case - the clear text file.
+     *
+     * @param file A newline-delimited file that you want to <b>over-write,
+     * delete, or create</b>.
+     * 
+     */
+    public TextLineWriter(File file) {
+        pwFile = file;
+        this.encoded = XCodes.none;
+    }
+
+    /**
+     * Create a 'slow writer' for a newline-encrusted file. Will not be deleted
+     * or created until it is opened.
      *
      * @param file A newline-delimited file that you want to <b>over-write,
      * delete, or create</b>.
@@ -104,7 +119,7 @@ public class TextLineWriter {
             return false;
         }
         try {
-            out.write(XCodes.Encode(encoded,str));
+            out.write(XCodes.Encode(encoded, str));
             out.newLine();
             out.flush();
             return true;

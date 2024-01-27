@@ -23,6 +23,8 @@
  */
 package com.soft9000b.ini;
 
+import com.soft9000b.file.TextLineWriter;
+import com.soft9000b.tv.TagPair;
 import java.io.File;
 import org.junit.Test;
 
@@ -39,10 +41,10 @@ public class IniTest001 {
     public void Test00100() {
         IniFile ini = new IniFile(new File("TEST001.INI"));
         IniSection sec = ini.addSection("MyTest");
-        sec.append("LeftValue", "Assigned");
+        assert (sec.add("LeftValue", "Assigned") == true);
         sec = ini.addSection("MyTest2");
-        sec.append("TheOther", "Value");
-        System.out.println(ini.toString());
+        assert (sec.add("TheOther", "Value") == true);
+        //System.out.println(ini.toString());
         if (ini.save() == false) {
             System.err.println("TEST 00100 Failure.");
         }
@@ -55,4 +57,60 @@ public class IniTest001 {
         }
     }
 
+    @Test
+    public void Test00200() {
+        IniFile ini = new IniFile(new File("TEST002.INI"));
+        IniSection sec = ini.addSection("AnotherSection");
+        sec.addComment("We've commented.");
+        assert (sec.add("Complex", "Also assigned, as-is.") == true);
+        sec = ini.addSection("Another Section");
+        sec.addComment("We've commented, again.");
+        assert (sec.add("TheOther", "Value") == true);
+        //System.out.println(ini.toString());
+        if (ini.save() == false) {
+            System.err.println("TEST 00100 Failure.");
+        }
+        IniFile ini2 = ini.read();
+        if (ini2 == null) {
+            System.err.println("TEST 00110 Failure.");
+        }
+        if (!ini.equals(ini2)) {
+            System.err.println("TEST 00120 Failure.");
+        }
+    }
+
+    @Test
+    public void Test00300() {
+        File tfile = new File("TEST003.INI");
+        TextLineWriter writer = new TextLineWriter(tfile);
+        assert (writer.open() == true);
+        writer.writeLine("; Super-Block Comment");
+        writer.writeLine("[BlockA]");
+        writer.writeLine("zTag=value");
+        writer.writeLine("");
+        writer.writeLine(";Another super-block comment");
+        writer.writeLine("[BlockB]");
+        writer.writeLine("; Subblock comment A");
+        writer.writeLine("zTagA=value");
+        writer.writeLine(";Subblock comment B");
+        writer.writeLine("zTagB=value");
+        assert (writer.close() == true);
+
+        IniFile ini = IniFile.Read(tfile);
+        IniFile ini2 = new IniFile(tfile);
+        IniSection sec = ini2.addSection("BlockA");
+        sec.addSuperComment("Super-Block Comment");
+        assert (sec.add("zTag", "value") == true);
+        sec = ini2.addSection("[BlockB]");
+        sec.addSuperComment(";Another super-block comment");
+        assert (sec.add("zTag", "value") == true);
+        sec.addComment("Subblock comment A");
+        assert (sec.add("zTagA", "value") == true);
+        sec.addComment(";Subblock comment B");
+        assert (sec.add("zTagB", "value") == true);
+        assert(ini.compareTo(ini2) == 0);
+        //System.out.print("[" + ini.toString() + "]");
+        //System.out.print("[" + ini2.toString() + "]");
+
+    }
 }

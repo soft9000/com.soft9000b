@@ -76,7 +76,7 @@ public class IniFileReader {
             }
             if (sline.contains("=")) {
                 TagPair pair = TagPair.FromString(sline);
-                pwRow.append(pair);
+                pwRow.add(pair);
             }
         }
         if (!pwRow.isNull()) { // SECTION CAN BE EMPTY

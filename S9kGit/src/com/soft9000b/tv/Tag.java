@@ -130,7 +130,7 @@ public class Tag implements java.io.Serializable, java.lang.Comparable {
         if (sTag == null) {
             sTag = "";
         }
-        this.sTag = new String(sTag);
+        this.sTag = sTag;
     }
 
     /**
@@ -154,7 +154,7 @@ public class Tag implements java.io.Serializable, java.lang.Comparable {
         if (sValue == null) {
             sValue = "";
         }
-        this.sValue = new String(sValue);
+        this.sValue = sValue;
     }
 
     /**
@@ -223,7 +223,7 @@ public class Tag implements java.io.Serializable, java.lang.Comparable {
      * @return The array of data found that matches the tag. The array length is
      * zero on error / not found.
      */
-    public static Tag[] FindTagged(String sTag, final Tag[] tags, boolean bIgnoreCase) {
+    public static Tag[] FindTagged(String sTag, Tag[] tags, boolean bIgnoreCase) {
         Tag[] result = new Tag[0];
         if (sTag == null || tags == null) {
             return result;

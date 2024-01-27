@@ -88,7 +88,7 @@ public class TagPair extends Tag implements java.io.Serializable {
         return buffer.toString();
     }
 
-    public TagPair fromString(final String str) {
+    public TagPair fromString(String str) {
         if (str == null) {
             return null;
         }
@@ -105,7 +105,7 @@ public class TagPair extends Tag implements java.io.Serializable {
         return tvp;
     }
 
-    public static TagPair FromString(final String str) {
+    public static TagPair FromString(String str) {
         if (str == null) {
             return null;
         }

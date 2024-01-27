@@ -23,7 +23,6 @@
  */
 package com.soft9000b.file;
 
-import com.soft9000b.xcoders.Hex16;
 import com.soft9000b.xcoders.XCodes;
 import java.io.BufferedWriter;
 import java.io.File;

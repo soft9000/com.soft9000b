@@ -24,7 +24,6 @@
 package com.soft9000b.ini;
 
 import com.soft9000b.file.TextLineWriter;
-import com.soft9000b.tv.TagPair;
 import java.io.File;
 import org.junit.Test;
 

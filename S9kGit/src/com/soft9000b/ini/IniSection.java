@@ -199,7 +199,7 @@ public class IniSection implements Comparable {
      * @param tag Section KEY / Tag
      * @return Caveat: null when none found.
      */
-    public TagPair getTagRef(final String tag) {
+    public TagPair getTagRef(String tag) {
         for (TagPair sec : section) {
             if (sec.getTag().equals(tag)) {
                 return sec;
@@ -214,7 +214,7 @@ public class IniSection implements Comparable {
      * @param tag KEY
      * @return
      */
-    private int getTagPos(final String tag) {
+    private int getTagPos(String tag) {
         for (int ss = 0; ss < section.size(); ss++) {
             TagPair sec = section.get(ss);
             if (sec.getTag().equals(tag)) {
@@ -230,7 +230,7 @@ public class IniSection implements Comparable {
      * @param tag Section KEY / Tag
      * @return Caveat: null when none found.
      */
-    public TagPair getTagCopy(final String tag) {
+    public TagPair getTagCopy(String tag) {
         for (TagPair sec : section) {
             if (sec.getTag().equals(tag)) {
                 return new TagPair(sec);
@@ -245,7 +245,7 @@ public class IniSection implements Comparable {
      * @param tag
      * @return False when no KEY / tag found.
      */
-    public boolean hasTag(final String tag) {
+    public boolean hasTag(String tag) {
         for (TagPair sec : section) {
             if (sec.getTag().equals(tag)) {
                 return true;
@@ -268,7 +268,7 @@ public class IniSection implements Comparable {
      *
      * @param key
      */
-    public void remove(final String key) {
+    public void remove(String key) {
         if (key == null) {
             return;
         }
@@ -289,11 +289,10 @@ public class IniSection implements Comparable {
      *
      * @param sline
      */
-    public void addComment(final String sline) {
-        if (sline == null) {
+    public void addComment(String str) {
+        if (str == null) {
             return;
         }
-        String str = sline;
         if (!str.startsWith(";")) {
             str = "; " + str;
         }
@@ -330,15 +329,14 @@ public class IniSection implements Comparable {
     /**
      * Super-comments preceed SECTION names.
      *
-     * @param sline
+     * @param str
      * @return
      */
-    public boolean addSuperComment(final String sline) {
-        if (sline == null) {
+    public boolean addSuperComment(String str) {
+        if (str == null) {
             // Not going to create a default section - nope.
             return false;
         }
-        String str = sline;
         if (!str.startsWith(";")) {
             str = "; " + str;
         }

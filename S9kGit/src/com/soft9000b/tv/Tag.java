@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2020 Randall.
+ * Copyright 2020 - 2024 Randall Nagy.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,6 +73,34 @@ public class Tag implements java.io.Serializable, java.lang.Comparable {
         if (sValue != null) {
             this.sValue = sValue;
         }
+    }
+
+    /**
+     * Get a stringified value, to be used by assign(below).
+     * @return The representational string.
+     */
+    @Override
+    public String toString() {
+        TagPair item = new TagPair(this.getTag(), this.getValue());
+        return item.toString();
+    }
+
+    /**
+     * Populate using the stringified value, as created by .toString(above).
+     * @param str
+     * @return False if this instance was not changed.
+     */
+    public boolean assign(String str) {
+        if (str == null) {
+            return false;
+        }
+        TagPair tp = TagPair.FromString(str);
+        if (tp.isNull()) {
+            return false;
+        }
+        this.setTag(tp.getTag());
+        this.setValue(tp.getValue());
+        return true;
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2020 Randall.
+ * Copyright 2020 - 2024 Randall Nagy.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -100,7 +100,7 @@ public class TagPair extends Tag implements java.io.Serializable {
         if (iStart == 0) {
             iStart++;
         }
-        TagPair tvp = new TagPair(str.substring(0, iStart - 1), str.substring(iPos + sSep.length(), str.length()));
+        TagPair tvp = new TagPair(str.substring(0, iStart), str.substring(iPos + sSep.length(), str.length()));
         tvp.trim();
         return tvp;
     }
@@ -117,7 +117,7 @@ public class TagPair extends Tag implements java.io.Serializable {
         if (iStart == 0) {
             iStart++;
         }
-        TagPair tvp = new TagPair(str.substring(0, iStart - 1), str.substring(iPos + DEFAULT_SEP.length(), str.length()));
+        TagPair tvp = new TagPair(str.substring(0, iStart), str.substring(iPos + DEFAULT_SEP.length(), str.length()));
         tvp.trim();
         return tvp;
     }

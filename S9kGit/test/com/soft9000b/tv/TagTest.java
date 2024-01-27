@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2020 Randall.
+ * Copyright 2020 - 2024 Randall Nagy.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,21 @@ import static org.junit.Assert.*;
 public class TagTest {
 
     public TagTest() {
+    }
+    @Test
+    public void testToFromString() {
+        System.out.println("stringifications");
+        final Tag iA = new Tag("123", "346");
+        String str = iA.toString();
+        TagPair iB = TagPair.FromString(str);
+        assert (iA.getTag().equals(iB.getTag()));
+        assert (iA.getValue().equals(iB.getValue()));
+        TagPair iC = iB.fromString("789=012");
+        assert(iC.getTag().equals("789"));
+        assert(iC.getValue().equals("012"));
+        assert(iC.assign(str) == true);
+        assert (iA.getTag().equals(iC.getTag()));
+        assert (iA.getValue().equals(iC.getValue()));
     }
 
     /**

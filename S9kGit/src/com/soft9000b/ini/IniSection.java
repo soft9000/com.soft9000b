@@ -1,0 +1,296 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2020 - 2024 Randall Nagy.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.soft9000b.ini;
+
+import com.soft9000b.tv.TagPair;
+import java.util.ArrayList;
+
+/**
+ * A collection of TagValue pairs associated with an INI File's "["Group
+ * Name"]".
+ *
+ * @author ranag
+ */
+public class IniSection implements Comparable {
+
+    private static final String DOS_NEWLINE = "\r\n";
+    private static final String COMMENT = "][[!]][";
+    private static final String SECTIONID = "[]]![[]";
+
+    /**
+     * Pull the KEY / Tag values.
+     *
+     * @param section A list of TagPair.
+     * @return An ArrayList. Always.
+     */
+    public static ArrayList<String> GetKeys(final ArrayList<TagPair> section) {
+        ArrayList<String> results = new ArrayList<>();
+        if (section != null) {
+            for (TagPair tag : section) {
+                results.add(tag.getTag());
+            }
+        }
+        return results;
+    }
+
+    private static TagPair MkComment(String sline) {
+        return new TagPair(IniSection.COMMENT, sline);
+    }
+
+    final ArrayList<TagPair> section;
+
+    /**
+     * The default IniRow has a null section name.
+     */
+    public IniSection() {
+        section = new ArrayList<>();
+    }
+
+    /**
+     * Cobble together an INI Section. Newline is at the end. Empty sections are
+     * okay.
+     *
+     * @return The representation string, suitable for use in an INI File.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (this.isEmpty() || this.isNull()) {
+            return sb.toString();
+        }
+
+        for (TagPair tv : this.section) {
+            if (tv.getTag().equals(IniSection.COMMENT)) {
+                sb.append(tv.getValue());
+                sb.append(DOS_NEWLINE); // DOS convention.
+                continue;
+            }
+            if (tv.getTag().equals(IniSection.SECTIONID)) {
+                sb.append(tv.getValue());
+                sb.append(DOS_NEWLINE); // DOS convention.
+                continue;
+            }
+            sb.append(tv.toString());
+            sb.append(DOS_NEWLINE); // DOS convention.
+        }
+        sb.append(DOS_NEWLINE); // DOS convention.
+        return sb.toString();
+    }
+
+    /**
+     * Return the assigned section name.
+     *
+     * @return The default section name is null!
+     */
+    public String getSectionName() {
+        TagPair ref = this.getTagRef(SECTIONID);
+        if (ref == null) {
+            return null;
+        }
+        return ref.getValue();
+    }
+
+    /**
+     * See if the section name is null.
+     *
+     * @return true if section name is dangerous / null.
+     */
+    public boolean isNull() {
+        return this.getTagRef(SECTIONID) == null;
+    }
+
+    /**
+     * See if the section has any TagValue items.
+     *
+     * @return False if nothing is in the section.
+     */
+    public boolean isEmpty() {
+        return section.isEmpty();
+    }
+
+    /**
+     * Assign a section / INI Section Name to any TagValue pairs. Spaces will be
+     * trimmed, and "[]" will be added to the section name as required.
+     *
+     * @param groupName A null section name translates to "[default]".
+     */
+    public void setSectionName(String groupName) {
+        if (groupName == null) {
+            groupName = "[default]";
+        } else {
+            groupName = groupName.trim();
+            if (!groupName.startsWith("[")) {
+                groupName = "[" + groupName;
+            }
+            if (!groupName.endsWith("]")) {
+                groupName = groupName + "]";
+            }
+        }
+        TagPair ref = this.getTagRef(SECTIONID);
+        if (ref != null) {
+            ref.setValue(groupName);
+        } else {
+            this.section.add(new TagPair(SECTIONID, groupName));
+        }
+    }
+
+    /**
+     * Add a TagValue item to the section / section name.
+     *
+     * @param pair
+     * @return False when the provided TagValue item is null.
+     */
+    public boolean append(final TagPair pair) {
+        if (pair != null) {
+            return section.add(pair);
+        }
+        return false;
+    }
+
+    /**
+     * A chance to combine, as well as to merge, TagValues regardless of their
+     * section names.
+     *
+     * @param source
+     * @return False if tag / KEY names.
+     */
+    public boolean merge(final IniSection source) {
+        ArrayList<TagPair> cooper = (ArrayList<TagPair>) source.section.clone();
+        ArrayList<String> keys = source.getKeys();
+        for (String key : keys) {
+            TagPair self = this.getTagRef(key);
+            if (self != null) {
+                TagPair other = source.getTagRef(key);
+                if (other == null) {
+                    return false; // yikes.
+                }
+                self.setValue(other.getValue());
+                source.remove(key);
+            }
+        }
+
+        return this.section.addAll(source.section);
+    }
+
+    /**
+     * Get a REFERENCE to any TagPair. Can be used to update the section.
+     *
+     * @param tag Section KEY / Tag
+     * @return Caveat: null when none found.
+     */
+    public TagPair getTagRef(final String tag) {
+        for (TagPair sec : section) {
+            if (sec.getTag().equals(tag)) {
+                return sec;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get a COPY of any TagPair.
+     *
+     * @param tag Section KEY / Tag
+     * @return Caveat: null when none found.
+     */
+    public TagPair getTagCopy(final String tag) {
+        for (TagPair sec : section) {
+            if (sec.getTag().equals(tag)) {
+                return new TagPair(sec);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * See if a KEY / Tag has already been defined.
+     *
+     * @param tag
+     * @return False when no KEY / tag found.
+     */
+    public boolean hasTag(final String tag) {
+        for (TagPair sec : section) {
+            if (sec.getTag().equals(tag)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get the keys. Only.
+     *
+     * @return Always an ArrayList<String>. Simply check if it is empty.
+     */
+    public ArrayList<String> getKeys() {
+        return IniSection.GetKeys(section);
+    }
+
+    /**
+     * Remove a KEY / Tag from a section. Key need not exist.
+     *
+     * @param key
+     */
+    public void remove(final String key) {
+        if (key == null) {
+            return;
+        }
+        TagPair found = null;
+        for (TagPair ref : this.section) {
+            if (ref.getTag().equals(key)) {
+                found = ref;
+                break;
+            }
+        }
+        if (found != null) {
+            this.section.remove(found);
+        }
+    }
+
+    public void addComment(final String sline) {
+        this.section.add(IniSection.MkComment(sline));
+    }
+
+    public void append(String key, String value) {
+        this.append(new TagPair(key, value));
+    }
+
+    @Override
+    public int compareTo(Object obj) {
+        if (obj == null) {
+            return -1;
+        }
+        int count = 0;
+        if (obj instanceof IniSection) {
+            IniSection ref = (IniSection) obj;
+            for (TagPair tv : this.section) {
+                if (tv.equals(tv)) {
+                    count++;
+                }
+            }
+        }
+        return this.section.size() - count;
+    }
+
+}

@@ -73,7 +73,8 @@ public class IniFile implements Comparable {
 
     /**
      * If there are no sections, then the file is empty.
-     * @return 
+     *
+     * @return
      */
     public boolean isEmpty() {
         return groups.isEmpty();
@@ -172,5 +173,40 @@ public class IniFile implements Comparable {
     @Override
     public boolean equals(Object obj) {
         return this.compareTo(obj) == 0;
+    }
+
+    /**
+     * Get a list of section names.
+     *
+     * @return
+     */
+    public String[] getSectionNames() {
+        ArrayList<String> names = new ArrayList<>();
+        String[] results = new String[0];
+        for (int ss = 0; ss < groups.size(); ss++) {
+            String sname = groups.get(ss).getSectionName();
+            if (sname != null) {
+                names.add(sname);
+            }
+        }
+        return names.toArray(results);
+    }
+
+    /**
+     * Locate a section, by name.
+     *
+     * @param section_name
+     * @return null if the named section is not found.
+     */
+    public IniSection getSectionNamed(String section_name) {
+        if (section_name != null && !section_name.isEmpty()) {
+            section_name = IniSection.MkSectionName(section_name);
+            for (IniSection group : groups) {
+                if (group.getSectionName().equals(section_name)) {
+                    return group;
+                }
+            }
+        }
+        return null;
     }
 }

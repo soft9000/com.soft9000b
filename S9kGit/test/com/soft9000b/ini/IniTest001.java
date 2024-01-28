@@ -125,6 +125,9 @@ public class IniTest001 {
         assert (writer.close() == true);
 
         IniFile ini = IniFile.Read(tfile);
+        String[] names = ini.getSectionNames();
+        assert (names.length == 2);
+
         IniFile ini2 = new IniFile(tfile);
         IniSection sec = ini2.addSection("BlockA");
         sec.addSuperComment("Super-Block Comment");
@@ -145,6 +148,11 @@ public class IniTest001 {
         // Dequote
         IniFile ini3 = ini2.read();
         assert (ini2.compareTo(ini3) == 0);
+
+        sec = ini3.getSectionNamed("[BlockB]");
+        assert (sec != null);
+        sec = ini3.getSectionNamed("BlockB");
+        assert (sec != null);
 
     }
 }

@@ -58,6 +58,23 @@ public class IniSection implements Comparable {
         return new TagPair(IniSection.COMMENT, sline);
     }
 
+    /**
+     * Create a "paralegal" section name for a string.
+     *
+     * @param groupName
+     * @return Always returns a string.
+     */
+    public static String MkSectionName(String groupName) {
+        groupName = groupName.trim();
+        if (!groupName.startsWith("[")) {
+            groupName = "[" + groupName;
+        }
+        if (!groupName.endsWith("]")) {
+            groupName = groupName + "]";
+        }
+        return groupName;
+    }
+
     final ArrayList<TagPair> section;
 
     /**
@@ -101,7 +118,7 @@ public class IniSection implements Comparable {
     /**
      * Return the assigned section name.
      *
-     * @return The default section name is null!
+     * @return The default section name can be null!
      */
     public String getSectionName() {
         TagPair ref = this.getTagRef(SECTIONID);
@@ -139,13 +156,7 @@ public class IniSection implements Comparable {
         if (groupName == null) {
             groupName = "[default]";
         } else {
-            groupName = groupName.trim();
-            if (!groupName.startsWith("[")) {
-                groupName = "[" + groupName;
-            }
-            if (!groupName.endsWith("]")) {
-                groupName = groupName + "]";
-            }
+            groupName = IniSection.MkSectionName(groupName);
         }
         TagPair ref = this.getTagRef(SECTIONID);
         if (ref != null) {
@@ -350,8 +361,8 @@ public class IniSection implements Comparable {
     }
 
     /**
-     * Classic INI l-values are delimited by double quotes.
-     * Use Dequote(below) to revert.
+     * Classic INI l-values are delimited by double quotes. Use Dequote(below)
+     * to revert.
      *
      * @param tv
      * @return INI encoded string.
@@ -388,6 +399,22 @@ public class IniSection implements Comparable {
         }
         result.setValue(value);
         return result;
+    }
+
+    /**
+     * Return the value (rvalue) for a KEY / Tag in this SECTION.
+     *
+     * @param key The lvalue. Because an empty payload is possible, this
+     * function also returns null if the KEY / Tag is not found.
+     * @return
+     */
+    public String getValue(String key) {
+        for (TagPair tv : this.section) {
+            if (tv.getTag().equals(key)) {
+                return tv.getValue();
+            }
+        }
+        return null;
     }
 
 }

@@ -390,7 +390,7 @@ public class IniSection implements Comparable {
      */
     static TagPair Dequote(String str) {
         TagPair result = TagPair.FromString(str);
-        String value = result.getTag().trim();
+        String value = result.getValue().trim();
         if (value.startsWith("\"")) {
             value = value.substring(1);
         }

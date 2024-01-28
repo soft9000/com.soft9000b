@@ -23,7 +23,6 @@
  */
 package com.soft9000b.ini;
 
-import com.soft9000b.collections.FileDictionary;
 import com.soft9000b.file.TextLineWriter;
 import java.io.File;
 import org.junit.AfterClass;
@@ -62,6 +61,17 @@ public class IniTest001 {
     }
 
     public IniTest001() {
+    }
+
+    @Test
+    public void Test00000() {
+        IniFile ini = new IniFile(zFiles[0]);
+        IniSection sec = ini.addSection("zMyTest");
+        assert (sec.add("LeftValue", "Assigned") == true);
+        assert (sec.getValue("LeftValue").equals("Assigned"));
+        assert(ini.getSectionNamed("zMyTest") != null);
+        assert(ini.getSectionNamed("zMy?Test") == null);
+        assert(ini.getSectionNamed("[zMyTest]") != null);
     }
 
     @Test

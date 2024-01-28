@@ -23,22 +23,50 @@
  */
 package com.soft9000b.ini;
 
+import com.soft9000b.collections.FileDictionary;
 import com.soft9000b.file.TextLineWriter;
 import java.io.File;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * Basic testing of the INI read, write, & represent ability.
  *
  * @author ranag
  */
 public class IniTest001 {
+
+    static File[] zFiles = {
+        new File("TEST001.INI"),
+        new File("TEST002.INI"),
+        new File("TEST003.INI"),};
+
+    @BeforeClass
+    public static void setUpClass() {
+        cleanup();
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        // WIP: Artifacts are good for review, at the moment.
+        // cleanup();
+    }
+
+    private static void cleanup() {
+        for (File file : zFiles) {
+            if (file.exists()) {
+                assert (file.delete() == true);
+            }
+        }
+    }
 
     public IniTest001() {
     }
 
     @Test
     public void Test00100() {
-        IniFile ini = new IniFile(new File("TEST001.INI"));
+        IniFile ini = new IniFile(zFiles[0]);
         IniSection sec = ini.addSection("MyTest");
         assert (sec.add("LeftValue", "Assigned") == true);
         sec = ini.addSection("MyTest2");
@@ -58,7 +86,7 @@ public class IniTest001 {
 
     @Test
     public void Test00200() {
-        IniFile ini = new IniFile(new File("TEST002.INI"));
+        IniFile ini = new IniFile(zFiles[1]);
         IniSection sec = ini.addSection("AnotherSection");
         sec.addComment("We've commented.");
         assert (sec.add("Complex", "Also assigned, as-is.") == true);
@@ -80,7 +108,8 @@ public class IniTest001 {
 
     @Test
     public void Test00300() {
-        File tfile = new File("TEST003.INI");
+        // Modernly, lvalues may'nt be encoded:
+        File tfile = zFiles[2];
         TextLineWriter writer = new TextLineWriter(tfile);
         assert (writer.open() == true);
         writer.writeLine("; Super-Block Comment");
@@ -106,10 +135,16 @@ public class IniTest001 {
         sec.addComment("Subblock comment A");
         assert (sec.add("zTagA", "value") == true);
         sec.addComment(";Subblock comment B");
+
         assert (sec.add("zTagB", "value") == true);
-        assert(ini.compareTo(ini2) == 0);
-        //System.out.print("[" + ini.toString() + "]");
-        //System.out.print("[" + ini2.toString() + "]");
+        assert (ini.compareTo(ini2) == 0);
+
+        // Enquote
+        assert (ini2.save() == true);
+
+        // Dequote
+        IniFile ini3 = ini2.read();
+        assert (ini2.compareTo(ini3) == 0);
 
     }
 }

@@ -75,7 +75,7 @@ public class IniFileReader {
                 }
             }
             if (sline.contains("=")) {
-                TagPair pair = TagPair.FromString(sline);
+                TagPair pair = IniSection.Dequote(sline);
                 pwRow.add(pair);
             }
         }

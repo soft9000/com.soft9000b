@@ -91,7 +91,7 @@ public class IniSection implements Comparable {
                 sb.append(DOS_NEWLINE); // DOS convention.
                 continue;
             }
-            sb.append(tv.toString());
+            sb.append(Enquote(tv));
             sb.append(DOS_NEWLINE); // DOS convention.
         }
         sb.append(DOS_NEWLINE); // DOS convention.
@@ -347,6 +347,47 @@ public class IniSection implements Comparable {
             this.section.add(pos, IniSection.MkComment(str));
         }
         return true;
+    }
+
+    /**
+     * Classic INI l-values are delimited by double quotes.
+     * Use Dequote(below) to revert.
+     *
+     * @param tv
+     * @return INI encoded string.
+     */
+    static String Enquote(final TagPair tv) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(tv.getTag());
+        sb.append(TagPair.DEFAULT_SEP);
+        String value = tv.getValue();
+        if (!value.startsWith("\"")) {
+            sb.append('"');
+        }
+        sb.append(value);
+        if (!value.endsWith("\"")) {
+            sb.append('"');
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Parse + remove quotations from an INI value line.
+     *
+     * @param str Enquote(above) result.
+     * @return
+     */
+    static TagPair Dequote(String str) {
+        TagPair result = TagPair.FromString(str);
+        String value = result.getTag().trim();
+        if (value.startsWith("\"")) {
+            value = value.substring(1);
+        }
+        if (value.endsWith("\"")) {
+            value = value.substring(0, value.length() - 1);
+        }
+        result.setValue(value);
+        return result;
     }
 
 }

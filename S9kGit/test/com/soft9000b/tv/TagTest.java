@@ -35,6 +35,7 @@ public class TagTest {
 
     public TagTest() {
     }
+    
     @Test
     public void testToFromString() {
         System.out.println("stringifications");

@@ -403,18 +403,42 @@ public class IniSection implements Comparable {
 
     /**
      * Return the value (rvalue) for a KEY / Tag in this SECTION.
+     * Note the keys are case insensitive.
      *
      * @param key The lvalue. Because an empty payload is possible, this
      * function also returns null if the KEY / Tag is not found.
-     * @return
+     * @return Null if not found.
      */
-    public String getValue(String key) {
+    public String getValue(String _key) {
+        if (_key == null || _key.isEmpty()) {
+            return null;
+        }
+        String key = _key.toLowerCase();
         for (TagPair tv : this.section) {
-            if (tv.getTag().equals(key)) {
+            if (tv.getTag().toLowerCase().equals(key)) {
                 return tv.getValue();
             }
         }
         return null;
+    }
+
+    /**
+     * Locate 0:* keyed pair(s). Note the keys are case insensitive.
+     * @param keyMulti The key to match.
+     * @return Null if none found.
+     */
+    public TagPair[] getAll(String keyMulti) {
+        if (keyMulti == null || keyMulti.isEmpty()) {
+            return null;
+        }
+        String key = keyMulti.toLowerCase();
+        ArrayList<TagPair> set = new ArrayList<>();
+        for (TagPair tv : this.section) {
+            if (tv.getTag().toLowerCase().equals(key)) {
+                set.add(tv);
+            }
+        }
+        return (TagPair[]) set.toArray();
     }
 
 }

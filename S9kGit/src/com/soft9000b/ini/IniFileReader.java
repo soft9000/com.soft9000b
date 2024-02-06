@@ -30,7 +30,7 @@ import java.io.File;
 
 /**
  *
- * @author ranag
+ * @author Randall
  */
 public class IniFileReader {
 

@@ -28,7 +28,7 @@ import com.soft9000b.xcoders.XCodes;
 
 /**
  *
- * @author ranag
+ * @author Randall
  */
 public class IniFileWriter {
 

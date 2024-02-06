@@ -25,12 +25,13 @@ package com.soft9000b.ini;
 
 import com.soft9000b.tv.TagPair;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A collection of TagValue pairs associated with an INI File's "["Group
  * Name"]".
  *
- * @author ranag
+ * @author Randall
  */
 public class IniSection implements Comparable {
 
@@ -402,8 +403,8 @@ public class IniSection implements Comparable {
     }
 
     /**
-     * Return the value (rvalue) for a KEY / Tag in this SECTION.
-     * Note the keys are case insensitive.
+     * Return the value (rvalue) for a KEY / Tag in this SECTION. Note the keys
+     * are case insensitive.
      *
      * @param key The lvalue. Because an empty payload is possible, this
      * function also returns null if the KEY / Tag is not found.
@@ -424,6 +425,7 @@ public class IniSection implements Comparable {
 
     /**
      * Locate 0:* keyed pair(s). Note the keys are case insensitive.
+     *
      * @param keyMulti The key to match.
      * @return Null if none found.
      */
@@ -438,7 +440,8 @@ public class IniSection implements Comparable {
                 set.add(tv);
             }
         }
-        return (TagPair[]) set.toArray();
+        TagPair[] results = new TagPair[0];
+        return set.toArray(results);
     }
 
 }

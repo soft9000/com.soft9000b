@@ -47,7 +47,7 @@ public class IniFile implements Comparable {
     }
 
     public ArrayList<IniSection> groups = new ArrayList<>();
-    File zfile = null;
+    protected File zfile = null;
 
     /**
      * A file for either reading, or writing.

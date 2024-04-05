@@ -25,7 +25,6 @@ package com.soft9000b.ini;
 
 import com.soft9000b.tv.TagPair;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A collection of TagValue pairs associated with an INI File's "["Group
@@ -440,7 +439,7 @@ public class IniSection implements Comparable {
                 set.add(tv);
             }
         }
-        TagPair[] results = new TagPair[0];
+        TagPair[] results = new TagPair[set.size()];
         return set.toArray(results);
     }
 

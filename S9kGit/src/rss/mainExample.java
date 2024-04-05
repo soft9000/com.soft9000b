@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2024 ranag.
+ * Copyright 2024 Randall Nagy.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import java.io.File;
 
 /**
  *
- * @author ranag
+ * @author Randall Nagy
  */
 public class mainExample {
         public static void main(String... args) {

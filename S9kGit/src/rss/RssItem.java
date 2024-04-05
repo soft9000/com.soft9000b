@@ -29,8 +29,8 @@ import java.util.TimeZone;
 
 /**
  * Simple classes for a simple undertaking!
- * 
- * @author ranag
+ *
+ * @author Randall Nagy
  */
 public class RssItem {
 
@@ -39,6 +39,12 @@ public class RssItem {
     public String Descryption = "";
     public String Date = "";
 
+    /**
+     * Set the Date field as required by RFC 822.
+     *
+     * @param date
+     * @param timeZone "EST", "GMT", etc.
+     */
     public void setDate(Date date, String timeZone) {
         // RFC 822 Date Format:
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
@@ -46,10 +52,21 @@ public class RssItem {
         this.Date = dateFormat.format(date);
     }
 
+    /**
+     * Use the default Date(NOW).
+     *
+     * @param timeZone "EST", "GMT", etc.
+     */
     public void setDate(String timeZone) {
         setDate(new Date(), timeZone);
     }
 
+    /**
+     * Use a epoch time (etc.)
+     *
+     * @param timAsMs   Epoch time.
+     * @param timeZone  "EST", "GMT", etc.
+     */
     public void setDate(long timAsMs, String timeZone) {
         setDate(new Date(timAsMs), timeZone);
     }

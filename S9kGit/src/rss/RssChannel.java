@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
  * Simple classes for a simple undertaking!
  * 
- * @author ranag
+ * @author Randall Nagy
  */
 public class RssChannel {
 
@@ -37,6 +37,10 @@ public class RssChannel {
     public String Link = "";
     public String Descryption = "";
 
+    /**
+     * Create a basic RSS 2.0 file.
+     * @return Your site's unary channel XML as a string - ready to write.
+     */
     public String getFeed() {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"

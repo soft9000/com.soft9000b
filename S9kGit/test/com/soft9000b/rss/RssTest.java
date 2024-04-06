@@ -23,46 +23,67 @@
  */
 package com.soft9000b.rss;
 
+import com.soft9000b.file.TextLineReader;
 import com.soft9000b.file.TextLineWriter;
+import com.soft9000b.xcoders.XCodes;
 import java.io.File;
 
 /**
  *
  * @author Randall Nagy
  */
-public class mainExample {
-        public static void main(String... args) {
+public class RssTest {
+    
+    public static void main(String... args) throws RssException {
         RssChannel chan = new RssChannel();
 
         // SINGLE CHANNEL
         chan.Title = "Nagy's Nexus";
         chan.Link = "https://soft9000.com";
         chan.Descryption = "Content to share and enjoy.";
-
+        
         RssItem item = new RssItem();
         item.Title = "Turtlebot Programming";
         item.Link = "https://soft9000.com/PY3KTG/index.html";
         item.Descryption = "Tutorial";
         chan.items.add(item);
-
+        
         item = new RssItem();
         item.Title = "Nagy's News";
         item.Link = "https://soft9000.com/eIdRecipePage.html";
         item.Descryption = "Quotations and Collectable Recipe Cards";
+        item.setDate("GMT");
         chan.items.add(item);
-
+        
         item = new RssItem();
         item.Title = "Nagy's Training";
         item.Link = "https://soft9000.com/index.html";
         item.Descryption = "Educational Opportunities by Randall Nagy";
         chan.items.add(item);
-
-        File file = new File("./nexus.rss");
-
+        
+        File file = new File("./nexus_test.rss");
+        
         TextLineWriter writer = new TextLineWriter(file);
         writer.open();
         writer.writeLine(chan.getFeed());
         writer.close();
         System.out.println(file.getPath());
+        
+        TextLineReader reader = new TextLineReader(file, XCodes.x16);
+        reader.open();
+        StringBuilder sb = new StringBuilder();
+        String line = "";
+        while (line != null) {
+            line = reader.readLine();
+            if (line != null && !line.isEmpty()) {
+                sb.append(line);
+                sb.append("\n");
+            }
+        }
+
+        RssChannel chanB = RssChannel.ReadFeed(sb.toString());
+        if (chan.getFeed().equals(chanB.getFeed())) {
+            System.out.println("Testing Success.");
+        }
     }
 }

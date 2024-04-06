@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 /**
  * Simple classes for a simple undertaking!
- * 
+ *
  * @author Randall Nagy
  */
 public class RssChannel {
@@ -37,8 +37,140 @@ public class RssChannel {
     public String Link = "";
     public String Descryption = "";
 
+    private static String _untag(String line, String root) {
+        line = line.replace("<" + root + ">", "");
+        return line.replace("</" + root + ">", "").trim();
+    }
+
+    /**
+     * Simply restore something WE created. Use case is to maintain our own
+     * meta, for our own feed, as I need do for the daily recipe updates on my
+     * own "speak easy" web sites.
+     *
+     * @param repr A getFeed() result.
+     * @return Returned instance will be .isNull() on error.
+     */
+    public static RssChannel ReadFeed(String repr) throws RssException {
+        int level = 0;
+        int where = 0;
+        RssChannel result = new RssChannel();
+        String[] lines = repr.split("\n");
+        for (String line : lines) {
+            where++;
+            line = line.trim();
+            if (line.isEmpty()) {
+                continue;
+            }
+            if (line.startsWith("<channel>")) {
+                if (level != 0) {
+                    // one channel, only.
+                    throw new RssException("Malformed RSS: Multi-Channel @" + where + ".", where);
+                }
+                level = 1;
+                continue;
+            }
+            if (line.startsWith("<item>")) {
+                if (level == 0) {
+                    throw new RssException("Malformed RSS: Channel Not Found @" + where + ".", where);
+                }
+                result.items.add(new RssItem());
+                level = 2;
+                continue;
+            }
+            if (line.startsWith("<title>")) {
+                if (level == 0) {
+                    throw new RssException("Malformed RSS: Unexpected <title> definition @" + where + ".", where);
+                }
+                line = _untag(line, "title");
+                if (level == 1) {
+                    if (!result.Title.isEmpty()) {
+                        throw new RssException("Malformed RSS: duplicate channel <title> @" + where + ".", where);
+                    }
+                    result.Title = line;
+                    continue;
+                }
+                if (level == 2) {
+                    if (result.items.isEmpty()) {
+                        throw new RssException("Malformed RSS: Orphaned <title> @" + where + ".", where);
+                    }
+                    RssItem pwItem = result.items.get(result.items.size() - 1);
+                    if (!pwItem.Title.isEmpty()) {
+                        throw new RssException("Malformed RSS: duplicate item <title> @" + where + ".", where);
+                    }
+                    pwItem.Title = line;
+                    continue;
+                }
+            }
+            if (line.startsWith("<link>")) {
+                if (level == 0) {
+                    throw new RssException("Malformed RSS: Unexpected <link> definition @" + where + ".", where);
+                }
+                line = _untag(line, "link");
+                if (level == 1) {
+                    if (!result.Link.isEmpty()) {
+                        throw new RssException("Malformed RSS: duplicate channel <link> @" + where + ".", where);
+                    }
+                    result.Link = line;
+                    continue;
+                }
+                if (level == 2) {
+                    if (result.items.isEmpty()) {
+                        throw new RssException("Malformed RSS: Orphaned <link> @" + where + ".", where);
+                    }
+                    RssItem pwItem = result.items.get(result.items.size() - 1);
+                    if (!pwItem.Link.isEmpty()) {
+                        throw new RssException("Malformed RSS: duplicate item <link> @" + where + ".", where);
+                    }
+                    pwItem.Link = line;
+                    continue;
+                }
+            }
+            if (line.startsWith("<description>")) {
+                if (level == 0) {
+                    throw new RssException("Malformed RSS: unexpected <description> @" + where + ".", where);
+                }
+                line = _untag(line, "description");
+                if (level == 1) {
+                    if (!result.Descryption.isEmpty()) {
+                        throw new RssException("Malformed RSS: duplicate channel <description> @" + where + ".", where);
+                    }
+                    result.Descryption = line;
+                    continue;
+                }
+                if (level == 2) {
+                    if (result.items.isEmpty()) {
+                        throw new RssException("Malformed RSS: Orphaned <description> @" + where + ".", where);
+                    }
+                    RssItem pwItem = result.items.get(result.items.size() - 1);
+                    if (!pwItem.Descryption.isEmpty()) {
+                        throw new RssException("Malformed RSS: duplicate item <description> @" + where + ".", where);
+                    }
+                    pwItem.Descryption = line;
+                    continue;
+                }
+            }
+            if (line.startsWith("<pubDate>")) {
+                if (level != 2) {
+                    throw new RssException("Malformed RSS: Unexpected <pubDate> @" + where + ".", where);
+                }
+                if (result.items.isEmpty()) {
+                    throw new RssException("Malformed RSS: Orphaned <pubDate> @" + where + ".", where);
+                }
+                line = _untag(line, "pubDate");
+                RssItem pwItem = result.items.get(result.items.size() - 1);
+                if (!pwItem.Date.isEmpty()) {
+                    throw new RssException("Malformed RSS: Duplicate <pubDate> @" + where + ".", where);
+                }
+                pwItem.Date = line;
+            }
+
+        }
+        return result;
+    }
+
     /**
      * Create a basic RSS 2.0 file.
+     *
      * @return Your site's unary channel XML as a string - ready to write.
      */
     public String getFeed() {
@@ -65,5 +197,38 @@ public class RssChannel {
         sb.append("</channel>\n"
                 + "</rss>");
         return sb.toString();
+    }
+
+    /**
+     * See if we've anything.
+     *
+     * @return True when we're empty.
+     */
+    public boolean isNull() {
+        if (this.Descryption.isEmpty() && this.Link.isEmpty() && this.Title.isEmpty()) {
+            return this.items.isEmpty();
+        }
+        return false;
+    }
+
+    /**
+     * Whilst we may have data, we still might not be "all there yet." State is
+     * particularly valid when we've had a problem during re-loading.
+     *
+     * @return True if all is ready for saving. Caveat dated items.
+     */
+    public boolean isSane() {
+        if (isNull()) {
+            return false;
+        }
+        if (this.Descryption.isEmpty() || this.Link.isEmpty() || this.Title.isEmpty()) {
+            return false;
+        }
+        for (RssItem item : this.items) {
+            if (!item.isSane()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

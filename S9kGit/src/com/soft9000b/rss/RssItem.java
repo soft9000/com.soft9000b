@@ -64,10 +64,35 @@ public class RssItem {
     /**
      * Use a epoch time (etc.)
      *
-     * @param timAsMs   Epoch time.
-     * @param timeZone  "EST", "GMT", etc.
+     * @param timAsMs Epoch time.
+     * @param timeZone "EST", "GMT", etc.
      */
     public void setDate(long timAsMs, String timeZone) {
         setDate(new Date(timAsMs), timeZone);
+    }
+
+    /**
+     * See if we've anything.
+     *
+     * @return True when we're empty.
+     */
+    public boolean isNull() {
+        return this.Descryption.isEmpty() && this.Link.isEmpty() && this.Title.isEmpty();
+    }
+    
+    /**
+     * Whilst we may have data, we still might not be "all there yet." State is particularly
+     * valid when we've had a problem during re-loading.
+     * 
+     * @return True if all is ready for saving. Caveat dated items.
+     */
+    boolean isSane() {
+        if (isNull()) {
+            return false;
+        }
+        if (this.Descryption.isEmpty() || this.Link.isEmpty() || this.Title.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 }

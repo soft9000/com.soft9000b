@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+<title>Nagy's Nexus</title>
+<link>https://soft9000.com</link>
+<description>Nagy's Nexus</description>
+  <item>
+  <title>Turtlebot Programming</title>
+  <link>https://soft9000.com/PY3KTG/index.html</link>
+  <description>Turtlebot Programming</description>
+   </item>
+  <item>
+  <title>Nagy's News</title>
+  <link>https://soft9000.com/eIdRecipePage.html</link>
+  <description>Nagy's News</description>
+  <pubDate>Sat, 06 Apr 2024 09:49:18 GMT</pubDate>
+   </item>
+  <item>
+  <title>Nagy's Training</title>
+  <link>https://soft9000.com/index.html</link>
+  <description>Nagy's Training</description>
+   </item>
+</channel>
+</rss>

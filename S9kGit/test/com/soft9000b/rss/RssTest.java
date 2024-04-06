@@ -29,46 +29,47 @@ import com.soft9000b.xcoders.XCodes;
 import java.io.File;
 
 /**
- *
+ * Testing the critical path, only.
  * @author Randall Nagy
  */
 public class RssTest {
-    
+
     public static void main(String... args) throws RssException {
         RssChannel chan = new RssChannel();
 
         // SINGLE CHANNEL
         chan.Title = "Nagy's Nexus";
         chan.Link = "https://soft9000.com";
-        chan.Descryption = "Content to share and enjoy.";
-        
+        chan.Description = "Content to share and enjoy.";
+
         RssItem item = new RssItem();
         item.Title = "Turtlebot Programming";
         item.Link = "https://soft9000.com/PY3KTG/index.html";
         item.Description = "Tutorial";
         chan.items.add(item);
-        
+
         item = new RssItem();
         item.Title = "Nagy's News";
         item.Link = "https://soft9000.com/eIdRecipePage.html";
         item.Description = "Quotations and Collectable Recipe Cards";
         item.setDate("GMT");
         chan.items.add(item);
-        
+        RssItem testItem = item;
+
         item = new RssItem();
         item.Title = "Nagy's Training";
         item.Link = "https://soft9000.com/index.html";
         item.Description = "Educational Opportunities by Randall Nagy";
         chan.items.add(item);
-        
+
         File file = new File("./nexus_test.rss");
-        
+
         TextLineWriter writer = new TextLineWriter(file);
         writer.open();
         writer.writeLine(chan.getFeed());
         writer.close();
         System.out.println(file.getPath());
-        
+
         TextLineReader reader = new TextLineReader(file, XCodes.x16);
         reader.open();
         StringBuilder sb = new StringBuilder();
@@ -82,8 +83,26 @@ public class RssTest {
         }
 
         RssChannel chanB = RssChannel.ReadFeed(sb.toString());
-        if (chan.getFeed().equals(chanB.getFeed())) {
-            System.out.println("Testing Success.");
+        if (!chan.getFeed().equals(chanB.getFeed())) {
+            throw new RssException("Regression: Comp 1000", -1);
         }
+
+        // Date munging is on our critical path:
+        testItem.Date = "Sat, 06 Apr 2024 10:14:31 GMT";
+        String oldDate = RssItemDater.GetDate(chan,
+                "https://soft9000.com/eIdRecipePage.html");
+        if (oldDate.isEmpty()) {
+            throw new RssException("Regression: Date 1000", -1);
+        }
+
+        if (RssItemDater.TouchLink(chan,
+                "https://soft9000.com/eIdRecipePage.html", "GMT") == true) {
+            String newDate = RssItemDater.GetDate(chan,
+                    "https://soft9000.com/eIdRecipePage.html");
+            if (oldDate.equals(newDate)) {
+                throw new RssException("Regression: Date 2000", -1);
+            }
+        }
+        System.out.println("Testing Success.");
     }
 }

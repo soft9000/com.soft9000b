@@ -37,7 +37,7 @@ public class mainExample {
         // SINGLE CHANNEL
         chan.Title = "Nagy's Nexus";
         chan.Link = "https://soft9000.com";
-        chan.Descryption = "Content to share and enjoy.";
+        chan.Description = "Content to share and enjoy.";
 
         RssItem item = new RssItem();
         item.Title = "Turtlebot Programming";

@@ -35,7 +35,7 @@ public class RssChannel {
     public ArrayList<RssItem> items = new ArrayList<>();
     public String Title = "";
     public String Link = "";
-    public String Descryption = "";
+    public String Description = "";
 
     private static String _untag(String line, String root) {
         line = line.replace("<" + root + ">", "");
@@ -131,10 +131,10 @@ public class RssChannel {
                 }
                 line = _untag(line, "description");
                 if (level == 1) {
-                    if (!result.Descryption.isEmpty()) {
+                    if (!result.Description.isEmpty()) {
                         throw new RssException("Malformed RSS: duplicate channel <description> @" + where + ".", where);
                     }
-                    result.Descryption = line;
+                    result.Description = line;
                     continue;
                 }
                 if (level == 2) {
@@ -205,15 +205,34 @@ public class RssChannel {
      * @return True when we're empty.
      */
     public boolean isNull() {
-        if (this.Descryption.isEmpty() && this.Link.isEmpty() && this.Title.isEmpty()) {
+        if (this.Description.isEmpty() && this.Link.isEmpty() && this.Title.isEmpty()) {
             return this.items.isEmpty();
         }
         return false;
     }
 
     /**
-     * Whilst we may have data, we still might not be "all there yet." State is
-     * particularly valid when we've had a problem during re-loading.
+     * There must be only a single URL in any of our feeds.
+     *
+     * @param link The precise .item.link.
+     * @return The number of time an .item has a .link
+     */
+    public int itemLinks(String link) {
+        int count = 0;
+        if (this.isNull()) {
+            return count;
+        }
+        for (RssItem item : this.items) {
+            if (item.Link.equals(link)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Whilst we may have data, we still might not be "all there yet." We also 
+     * might have more than a single link, which we should not.
      *
      * @return True if all is ready for saving. Caveat dated items.
      */
@@ -221,12 +240,17 @@ public class RssChannel {
         if (isNull()) {
             return false;
         }
-        if (this.Descryption.isEmpty() || this.Link.isEmpty() || this.Title.isEmpty()) {
+        if (this.Description.isEmpty() || this.Link.isEmpty() || this.Title.isEmpty()) {
             return false;
         }
         for (RssItem item : this.items) {
             if (!item.isSane()) {
                 return false;
+            }
+            if (!item.Link.isEmpty()) {
+                if (itemLinks(item.Link) != 1) {
+                    return false;
+                }
             }
         }
         return true;

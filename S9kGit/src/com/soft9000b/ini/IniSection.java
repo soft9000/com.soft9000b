@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * A collection of TagValue pairs associated with an INI File's "["Group
  * Name"]".
  *
- * @author Randall
+ * @author Randall Nagy
  */
 public class IniSection implements Comparable {
 

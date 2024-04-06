@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Randall
+ * @author Randall Nagy
  */
 public class TagTest {
 

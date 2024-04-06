@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 /**
  * Basic testing. A place for growth?
  * 
- * @author Randall
+ * @author Randall Nagy
  */
 public class ObjectEnumeratorTest {
 

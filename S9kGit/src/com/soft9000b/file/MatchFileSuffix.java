@@ -29,7 +29,7 @@ import java.io.FileFilter;
 /**
  * Match a file suffix - either lower or upper case.
  *
- * @author ranag
+ * @author Randall Nagy
  */
 public class MatchFileSuffix implements FileFilter {
 

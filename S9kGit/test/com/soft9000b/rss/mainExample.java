@@ -21,9 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package rss;
+package com.soft9000b.rss;
 
 import com.soft9000b.file.TextLineWriter;
+import com.soft9000b.rss.RssChannel;
+import com.soft9000b.rss.RssItem;
 import java.io.File;
 
 /**

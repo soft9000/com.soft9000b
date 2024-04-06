@@ -24,7 +24,7 @@
 
 /**
  *
- * @author Professor Nagy
+ * @author Randall Nagy
  */
 
 package com.soft900b;

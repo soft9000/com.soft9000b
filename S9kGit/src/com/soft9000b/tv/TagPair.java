@@ -34,7 +34,7 @@ package com.soft9000b.tv;
  * defined, either the <b>TagBlock</b> or the <b>TagStatement</b> are a lot more
  * useful.</p>
  *
- * @author Professor Nagy
+ * @author Randall Nagy
  */
 public class TagPair extends Tag implements java.io.Serializable {
 

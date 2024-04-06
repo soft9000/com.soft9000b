@@ -26,7 +26,7 @@ package com.soft9000b.xcoders;
 /**
  * Classic Hex16 encoder / decoder.
  * 
- * @author Randall
+ * @author Randall Nagy
  */
 public class Hex16 {
 /**

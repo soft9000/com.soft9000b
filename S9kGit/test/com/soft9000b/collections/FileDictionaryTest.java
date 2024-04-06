@@ -34,7 +34,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Randall
+ * @author Randall Nagy
  */
 public class FileDictionaryTest {
 

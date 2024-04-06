@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package rss;
+package com.soft9000b.rss;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

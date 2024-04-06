@@ -37,7 +37,7 @@ import java.io.IOException;
  * a 'weaponized' class whose interface must be relatively robust (i.e. it will
  * be used a lot!)
  *
- * @author ProfNagy
+ * @author Randall Nagy
  */
 public class TextLineReader {
 

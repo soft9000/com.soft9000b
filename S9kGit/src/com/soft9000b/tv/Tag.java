@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author R.A. Nagy
+ * @author Randall Nagy
  */
 public class Tag implements java.io.Serializable, java.lang.Comparable {
 

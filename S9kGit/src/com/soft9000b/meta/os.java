@@ -27,7 +27,7 @@ import java.nio.file.FileSystems;
 
 /**
  *
- * @author ranag
+ * @author Randall Nagy
  */
 public class os {
 

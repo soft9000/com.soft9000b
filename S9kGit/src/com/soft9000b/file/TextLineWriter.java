@@ -32,7 +32,7 @@ import java.io.FileWriter;
  * This OBJECT will write lines - and maintain the file handle - for a linear
  * TEXT file.
  *
- * @author Professor Nagy
+ * @author Randall Nagy
  */
 public class TextLineWriter {
 

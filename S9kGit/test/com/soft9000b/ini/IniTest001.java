@@ -32,7 +32,7 @@ import org.junit.Test;
 /**
  * Basic testing of the INI read, write, & represent ability.
  *
- * @author ranag
+ * @author Randall Nagy
  */
 public class IniTest001 {
 

@@ -37,7 +37,7 @@ import java.util.Enumeration;
  * An opportunity to create a production-quality way to C.R.U.D a serializable
  * collection of tag-value pairs.
  *
- * @author Randall
+ * @author Randall Nagy
  */
 public class FileDictionary extends Dictionary implements Serializable {
 

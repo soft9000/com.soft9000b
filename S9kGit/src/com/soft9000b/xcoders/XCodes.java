@@ -26,7 +26,7 @@ package com.soft9000b.xcoders;
 /**
  * Factorized support for integral encodings. -More to come?
  * 
- * @author Randall
+ * @author Randall Nagy
  */
 public enum XCodes {
     none(0),

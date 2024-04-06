@@ -45,20 +45,20 @@ public class RssTest {
         RssItem item = new RssItem();
         item.Title = "Turtlebot Programming";
         item.Link = "https://soft9000.com/PY3KTG/index.html";
-        item.Descryption = "Tutorial";
+        item.Description = "Tutorial";
         chan.items.add(item);
         
         item = new RssItem();
         item.Title = "Nagy's News";
         item.Link = "https://soft9000.com/eIdRecipePage.html";
-        item.Descryption = "Quotations and Collectable Recipe Cards";
+        item.Description = "Quotations and Collectable Recipe Cards";
         item.setDate("GMT");
         chan.items.add(item);
         
         item = new RssItem();
         item.Title = "Nagy's Training";
         item.Link = "https://soft9000.com/index.html";
-        item.Descryption = "Educational Opportunities by Randall Nagy";
+        item.Description = "Educational Opportunities by Randall Nagy";
         chan.items.add(item);
         
         File file = new File("./nexus_test.rss");

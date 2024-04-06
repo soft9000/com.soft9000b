@@ -142,10 +142,10 @@ public class RssChannel {
                         throw new RssException("Malformed RSS: Orphaned <description> @" + where + ".", where);
                     }
                     RssItem pwItem = result.items.get(result.items.size() - 1);
-                    if (!pwItem.Descryption.isEmpty()) {
+                    if (!pwItem.Description.isEmpty()) {
                         throw new RssException("Malformed RSS: duplicate item <description> @" + where + ".", where);
                     }
-                    pwItem.Descryption = line;
+                    pwItem.Description = line;
                     continue;
                 }
             }
@@ -187,7 +187,7 @@ public class RssChannel {
             sb.append("  <item>\n"
                     + "  <title>" + item.Title + "</title>\n"
                     + "  <link>" + item.Link + "</link>\n"
-                    + "  <description>" + item.Title + "</description>\n");
+                    + "  <description>" + item.Description + "</description>\n");
             if (!item.Date.isEmpty()) {
                 sb.append("  <pubDate>" + item.Date + "</pubDate>\n");
             }

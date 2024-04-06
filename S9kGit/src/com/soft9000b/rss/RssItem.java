@@ -36,7 +36,7 @@ public class RssItem {
 
     public String Title = "";
     public String Link = "";
-    public String Descryption = "";
+    public String Description = "";
     public String Date = "";
 
     /**
@@ -77,7 +77,7 @@ public class RssItem {
      * @return True when we're empty.
      */
     public boolean isNull() {
-        return this.Descryption.isEmpty() && this.Link.isEmpty() && this.Title.isEmpty();
+        return this.Description.isEmpty() && this.Link.isEmpty() && this.Title.isEmpty();
     }
     
     /**
@@ -90,7 +90,7 @@ public class RssItem {
         if (isNull()) {
             return false;
         }
-        if (this.Descryption.isEmpty() || this.Link.isEmpty() || this.Title.isEmpty()) {
+        if (this.Description.isEmpty() || this.Link.isEmpty() || this.Title.isEmpty()) {
             return false;
         }
         return true;

@@ -111,13 +111,37 @@ public class TextLineReader {
         }
         try {
             String line = in.readLine();
-            if (line == null)
+            if (line == null) {
                 return line;
+            }
             return XCodes.Decode(encoded, line);
 
         } catch (IOException ex) {
             return null;
         }
+    }
+
+    /**
+     * Huge files can be a problem, so we'll require a limit on this version.
+     *
+     * @param maxLines The maximum number of lines to store in memory.
+     * @return The lines read, else null.
+     */
+    public String readAll(int maxLines) {
+        StringBuilder sb = new StringBuilder();
+        String line = "";
+        while (line != null) {
+            if (maxLines == 0) {
+                return null;
+            }
+            line = readLine();
+            if (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                maxLines--;
+            }
+        }
+        return sb.toString();
     }
 
     /**

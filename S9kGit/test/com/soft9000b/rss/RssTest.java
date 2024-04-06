@@ -23,18 +23,17 @@
  */
 package com.soft9000b.rss;
 
-import com.soft9000b.file.TextLineReader;
-import com.soft9000b.file.TextLineWriter;
-import com.soft9000b.xcoders.XCodes;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * Testing the critical path, only.
+ *
  * @author Randall Nagy
  */
 public class RssTest {
 
-    public static void main(String... args) throws RssException {
+    public static void main(String... args) throws RssException, FileNotFoundException {
         RssChannel chan = new RssChannel();
 
         // SINGLE CHANNEL
@@ -64,25 +63,10 @@ public class RssTest {
 
         File file = new File("./nexus_test.rss");
 
-        TextLineWriter writer = new TextLineWriter(file);
-        writer.open();
-        writer.writeLine(chan.getFeed());
-        writer.close();
+        RssChannelWriter.Write(chan, file);
         System.out.println(file.getPath());
 
-        TextLineReader reader = new TextLineReader(file, XCodes.x16);
-        reader.open();
-        StringBuilder sb = new StringBuilder();
-        String line = "";
-        while (line != null) {
-            line = reader.readLine();
-            if (line != null && !line.isEmpty()) {
-                sb.append(line);
-                sb.append("\n");
-            }
-        }
-
-        RssChannel chanB = RssChannel.ReadFeed(sb.toString());
+        RssChannel chanB = RssChannelReader.Read(file);
         if (!chan.getFeed().equals(chanB.getFeed())) {
             throw new RssException("Regression: Comp 1000", -1);
         }

@@ -25,6 +25,7 @@ package com.soft9000b.rss;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import static java.lang.Math.min;
 
 /**
  * Testing the critical path, only.
@@ -59,6 +60,9 @@ public class RssTest {
         item.Title = "Nagy's Training";
         item.Link = "https://soft9000.com/index.html";
         item.Description = "Educational Opportunities by Randall Nagy";
+        item.UniqueItemID = "" + item.Link.hashCode();
+        item.Comments = "Where I like to feature the key content for this site - no newlines, please.";
+        item.AuthorEmailAddress = "foo@bar.net (Foo Happens)";
         chan.items.add(item);
 
         File file = new File("./nexus_test.rss");
@@ -67,8 +71,23 @@ public class RssTest {
         System.out.println(file.getPath());
 
         RssChannel chanB = RssChannelReader.Read(file);
-        if (!chan.getFeed().equals(chanB.getFeed())) {
-            throw new RssException("Regression: Comp 1000", -1);
+        String sA = chan.getFeed();
+        String sB = chanB.getFeed();
+        if (!sA.equals(sB)) {
+            int line = 1;
+            int where = 1;
+            int min = min(sA.length(), sB.length());
+            for (int ss = 0; ss < min; ss++) {
+                if (sA.charAt(ss) != sB.charAt(ss)) {
+                    throw new RssException("Regression: CharComp at " + line + "@" + where, line);
+                }
+                if (sA.charAt(ss) == '\n') {
+                    line++;
+                    where = 1;
+                }
+                where++;
+            }
+
         }
 
         // Date munging is on our critical path:

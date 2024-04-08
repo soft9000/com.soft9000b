@@ -47,6 +47,8 @@ public class RssChannel {
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
                 + "<rss version=\"2.0\">\n"
                 + "<channel>\n"
+                + "<docs>https://www.rssboard.org/rss-specification</docs>\n"
+                + "<generator>https://github.com/soft9000/com.soft9000b</generator>\n"
                 + "<title>" + this.Title + "</title>\n"
                 + "<link>" + this.Link + "</link>\n"
                 + "<description>" + this.Title + "</description>\n"
@@ -59,6 +61,15 @@ public class RssChannel {
                     + "  <description>" + item.Description + "</description>\n");
             if (!item.Date.isEmpty()) {
                 sb.append("  <pubDate>" + item.Date + "</pubDate>\n");
+            }
+            if (!item.AuthorEmailAddress.isEmpty()) {
+                sb.append("  <author>" + item.AuthorEmailAddress + "</author>\n");
+            }
+            if (!item.Comments.isEmpty()) {
+                sb.append("  <comments>" + item.Comments + "</comments>\n");
+            }
+            if (!item.UniqueItemID.isEmpty()) {
+                sb.append("  <guid>" + item.UniqueItemID + "</guid>\n");
             }
             sb.append("   </item>\n");
 
@@ -100,7 +111,7 @@ public class RssChannel {
     }
 
     /**
-     * Whilst we may have data, we still might not be "all there yet." We also 
+     * Whilst we may have data, we still might not be "all there yet." We also
      * might have more than a single link, which we should not.
      *
      * @return True if all is ready for saving. Caveat dated items.

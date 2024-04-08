@@ -38,6 +38,9 @@ public class RssItem {
     public String Link = "";
     public String Description = "";
     public String Date = "";
+    public String Comments = "";
+    public String AuthorEmailAddress = "";// aka "<author/>
+    public String UniqueItemID = ""; // aka "<guid/>"
 
     /**
      * Set the Date field as required by RFC 822.

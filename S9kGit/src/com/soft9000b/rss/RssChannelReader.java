@@ -171,7 +171,48 @@ public class RssChannelReader {
                 }
                 pwItem.Date = line;
             }
-
+            if (line.startsWith("<comments>")) {
+                if (level != 2) {
+                    throw new RssException("Malformed RSS: Unexpected <comments> @" + where + ".", where);
+                }
+                if (result.items.isEmpty()) {
+                    throw new RssException("Malformed RSS: Orphaned <comments> @" + where + ".", where);
+                }
+                line = _untag(line, "comments");
+                RssItem pwItem = result.items.get(result.items.size() - 1);
+                if (!pwItem.Comments.isEmpty()) {
+                    throw new RssException("Malformed RSS: Duplicate <comments> @" + where + ".", where);
+                }
+                pwItem.Comments = line;
+            }
+            if (line.startsWith("<author>")) {
+                if (level != 2) {
+                    throw new RssException("Malformed RSS: Unexpected <author> @" + where + ".", where);
+                }
+                if (result.items.isEmpty()) {
+                    throw new RssException("Malformed RSS: Orphaned <author> @" + where + ".", where);
+                }
+                line = _untag(line, "author");
+                RssItem pwItem = result.items.get(result.items.size() - 1);
+                if (!pwItem.AuthorEmailAddress.isEmpty()) {
+                    throw new RssException("Malformed RSS: Duplicate <author> @" + where + ".", where);
+                }
+                pwItem.AuthorEmailAddress = line;
+            }
+            if (line.startsWith("<guid>")) {
+                if (level != 2) {
+                    throw new RssException("Malformed RSS: Unexpected <guid> @" + where + ".", where);
+                }
+                if (result.items.isEmpty()) {
+                    throw new RssException("Malformed RSS: Orphaned <guid> @" + where + ".", where);
+                }
+                line = _untag(line, "guid");
+                RssItem pwItem = result.items.get(result.items.size() - 1);
+                if (!pwItem.UniqueItemID.isEmpty()) {
+                    throw new RssException("Malformed RSS: Duplicate <guid> @" + where + ".", where);
+                }
+                pwItem.UniqueItemID = line;
+            }
         }
         return result;
     }
